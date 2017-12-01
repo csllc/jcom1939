@@ -1,0 +1,11 @@
+{
+  "name": "jcom1939",
+  "version": "1.0.0",
+  "description": "NodeJS interface to Copperhill JCOM1939 Module",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive test"
+  },
+  "author": "bglase@icloud.com",
+  "license": "MIT"
+}
