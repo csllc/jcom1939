@@ -165,8 +165,8 @@ class Jcom1939 extends EventEmitter {
 
           me.configure()
           .then( function() {
-            console.log( 'board configure complete ');
-            
+            //console.log( 'board configure complete ');
+
             // board configured, now do CAN instance
             return me.can1.configure();
           })
@@ -178,7 +178,7 @@ class Jcom1939 extends EventEmitter {
           })
           .then( function() {
             // success!
-            console.log( 'resolving open');
+            //console.log( 'resolving open');
             resolve();
           })
           .catch( function(err) {
@@ -222,10 +222,10 @@ class Jcom1939 extends EventEmitter {
     // read the board version info
     //todo.push( me.version());
 
-    return  me.reset()
-    .then(function() {
-        return me.setHeart( me.options.heartbeat );
-    });
+    // return  me.reset()
+    // .then(function() {
+    //     return me.setHeart( me.options.heartbeat );
+    // });
 
    // return todo[0].then(function() { return todo[1]; });
 
@@ -233,7 +233,7 @@ class Jcom1939 extends EventEmitter {
     //return Promise.all( todo );
 
     //return seriesPromise(todo); //.reduce((p, f) => p.then(f), Promise.resolve());
-    //return todo.reduce((p, f) => p.then(f), Promise.resolve());
+    return todo.reduce((p, f) => p.then(function() { return f; }), Promise.resolve());
   }
 
 
@@ -260,7 +260,7 @@ class Jcom1939 extends EventEmitter {
   // removing it from the queue
   resolveRequest( request, id, err ) {
 
-    console.log( 'resolving ' + request );
+    //console.log( 'resolving ' + request );
 
     let index = this.requestQueue.findIndex( function(item) {
       return item.id === id && item.msgId === request;
@@ -299,7 +299,7 @@ class Jcom1939 extends EventEmitter {
 
     return new Promise( function( resolve, reject ) {
 
-      console.log( 'sending ' + id);
+      //console.log( 'sending ' + id);
 
       options = options || {};
 
@@ -311,7 +311,7 @@ class Jcom1939 extends EventEmitter {
       else {
         // otherwise use a callback to catch the ack
         let cb = function( err, result ) {
-          console.log( 'cb: ', err );
+          //console.log( 'cb: ', err );
           if( err ) {
             reject( err );
           }
@@ -319,7 +319,7 @@ class Jcom1939 extends EventEmitter {
             resolve( result );
           }
         };
-        console.log( 'write: ', id, data );
+        //console.log( 'write: ', id, data );
 
         me._send( id, data, cb, options.timeout );
       }
@@ -379,7 +379,7 @@ class Jcom1939 extends EventEmitter {
 
         timeout = timeout || DEFAULT_TIMEOUT;
 
-        console.log( 'waiting for response on ' + id + ' timeout ' + timeout );
+        //console.log( 'waiting for response on ' + id + ' timeout ' + timeout );
 
         // Set a timer in case no response
         let timer = setTimeout( function() {
@@ -511,7 +511,7 @@ class Jcom1939 extends EventEmitter {
   // Event handler that is triggered when a valid message arrives on the serial port
   onData( data ) {
     
-    console.log( 'onData:', data );
+    //console.log( 'onData:', data );
 
     switch( data[0] ) {
       case MSG_ID_ACK:
