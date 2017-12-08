@@ -194,7 +194,7 @@ describe( 'heartbeat', function() {
 });
 
 
-describe.skip( 'Send packets', function() {
+describe( 'Send packets', function() {
 
   before( function( done ) {
     board.setOptions({

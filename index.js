@@ -77,18 +77,6 @@ const DEFAULT_OPTIONS = {
 };
 
 
-function seriesPromise( tasks ) {
-
-  return tasks.reduce((promiseChain, currentTask) => {
-      return promiseChain.then(chainResults =>
-          currentTask.then(currentResult =>
-              [ ...chainResults, currentResult ]
-          )
-      );
-  }, Promise.resolve([]));
-
-}
-
 class Jcom1939 extends EventEmitter {
 	
 	constructor( options ) {
@@ -222,17 +210,6 @@ class Jcom1939 extends EventEmitter {
     // read the board version info
     //todo.push( me.version());
 
-    // return  me.reset()
-    // .then(function() {
-    //     return me.setHeart( me.options.heartbeat );
-    // });
-
-   // return todo[0].then(function() { return todo[1]; });
-
-    // return the to-do list to the caller
-    //return Promise.all( todo );
-
-    //return seriesPromise(todo); //.reduce((p, f) => p.then(f), Promise.resolve());
     return todo.reduce((p, f) => p.then(function() { return f; }), Promise.resolve());
   }
 
@@ -241,7 +218,9 @@ class Jcom1939 extends EventEmitter {
   close() {
     this.flushRequestQueue();
     if( this.port ) {
-      this.port.close();
+      if( this.port.isOpen ) {
+        this.port.close();
+      }
       this.port = null;
     }
   }
