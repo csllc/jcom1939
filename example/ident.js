@@ -39,9 +39,14 @@ board.list()
   console.log('Sending....');
 
   // this will fail if the address negotiation fails
-  return can.send( 59904, 255, 
-    [ 0x00, 0xEE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ],
-    { loopback: true });
+  // return can.send( 59904, 255, 
+  //   [ 0x00, 0xEE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ],
+  //   { loopback: true });
+
+  // this will fail if the address negotiation fails
+  return can.send( 0xEF00, 200, 
+    [ 72, 160, 0 ]
+    );
 
 })
 .then( function() {
@@ -59,4 +64,4 @@ board.list()
 setTimeout( function() {
   board.reset();
   process.exit(0);
-}, 500);
+}, 1000);
