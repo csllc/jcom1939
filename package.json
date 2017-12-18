@@ -1,6 +1,6 @@
 {
   "name": "jcom1939",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NodeJS interface to Copperhill JCOM1939 Module",
   "main": "index.js",
   "scripts": {
