@@ -1,10 +1,12 @@
+// Example script that opens the JCOM1939 connection, sets a unit ID, 
+// sends a PGN, and exits 
 
 const Jcom = require('..');
 
 let board = new Jcom({
   can1: {
     name: [ 0,0,0,0,0,0,0,0],
-    preferredAddress: 1,
+    preferredAddress: 100,
   }
 });
 

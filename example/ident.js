@@ -1,3 +1,8 @@
+// Example script to query the CANBUS network for J1939 devices.
+// Note the messageMode is set to allow address negotiation messages to come through, 
+// otherwise the JCOM1939 filters them out.
+// We will discover ourselves too (you should see a FOUND UNIT: 1) as long as address
+// negotiation succeeds  
 
 const Jcom = require('..');
 
@@ -5,6 +10,7 @@ let board = new Jcom({
   can1: {
     name: [ 0,0,0,0,0,0,0,0],
     preferredAddress: 1,
+    messageMode: 2,
   }
 });
 
@@ -26,32 +32,23 @@ board.list()
 
   // Handle each incoming message
   can.on('pgn', function( msg ) {
-    console.log( 'PGN:', msg );
+    // this will be a PGN 0xEE00, based on the filter we set up
+    console.log( 'FOUND UNIT: ' + msg.source + ' DATA: ', msg.data );
   });
 
   return board.open( ports[0].comName );
 })
 .then( function() {
-  // receive all messages
-  return can.addFilter( 0x100000 );
+  // receive address claim messages
+  return can.addFilter( 0xEE00 );
+
 })
 .then( function() {
   console.log('Sending....');
 
   // this will fail if the address negotiation fails
-  // return can.send( 59904, 255, 
-  //   [ 0x00, 0xEE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ],
-  //   { loopback: true });
-
-  // this will fail if the address negotiation fails
-  return can.send( 0xEF00, 200, 
-    [ 72, 160, 0 ]
-    );
-
-})
-.then( function() {
-  console.log( 'success');
-
+  return can.send( 59904, 255, 
+     [ 0x00, 0xEE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ]);
 
 })
 .catch( function( err ) {
@@ -60,8 +57,8 @@ board.list()
   process.exit(-1);
 });
 
-
+// Wait 3 seconds for responses, then exit
 setTimeout( function() {
   board.reset();
   process.exit(0);
-}, 1000);
+}, 3000);

@@ -92,6 +92,8 @@ class Jcom1939 extends EventEmitter {
     this.requestQueue = [];
 
     this.setOptions( options );
+
+    this.port = null;
   }
 
   // sets (or re-sets) the configuration options.
@@ -230,6 +232,11 @@ class Jcom1939 extends EventEmitter {
     }
   }
 
+  isOpen() {
+    return this.port && this.port.isOpen;
+  }
+
+
   // Error out any requests we are waiting for
   flushRequestQueue() {
     let me = this;
@@ -311,6 +318,8 @@ class Jcom1939 extends EventEmitter {
 
     let me = this;
 
+    //console.log( '_send: id: ' + id + ' len: ' + data.length + ' data: ', data  );
+
     // applies escaping rules for the START and ESC bytes
     function stuff( byte ) {
 
@@ -344,6 +353,7 @@ class Jcom1939 extends EventEmitter {
     let checksum = this.checksum( lengthMsb + lengthLsb + id, data );
     Array.prototype.push.apply( stuffedArray, stuff( checksum ) );
  
+    //console.log( 'TX: ', new Buffer(stuffedArray) );
     me.port.write( stuffedArray );
 
     if( cb ) {
@@ -485,6 +495,8 @@ class Jcom1939 extends EventEmitter {
 
   // Event handler that is triggered when a valid message arrives on the serial port
   onData( data ) {
+
+    //console.log( 'rx: ', data );
     
     switch( data[0] ) {
       case MSG_ID_ACK:

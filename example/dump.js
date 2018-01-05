@@ -1,4 +1,7 @@
 
+// Example that uses the JCOM1939 board to listen to all PGNs and dump them
+// to the console.
+
 const Jcom = require('..');
 
 let board = new Jcom();
@@ -6,6 +9,7 @@ let board = new Jcom();
 // use with the first (maybe only) CAN transceiver on the board
 let can = board.can1;
 
+// Get an array of all available COM ports on the system
 board.list()
 .then( function( ports ) {
 
@@ -16,7 +20,7 @@ board.list()
 
   // Handle each incoming message
   can.on('pgn', function( msg ) {
-    console.log( 'PGN:', msg );
+    console.log( 'RX:', msg );
   });
 
   return board.open( ports[0].comName );
@@ -28,6 +32,7 @@ board.list()
 .then( function() {
   console.log('Listening....');
 
+  // automatically exit after 30 seconds
   setTimeout( function() {
     board.reset();
     process.exit(0); 
